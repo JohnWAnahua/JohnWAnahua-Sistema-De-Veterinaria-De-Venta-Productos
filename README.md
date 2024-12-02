@@ -1,3 +1,1 @@
-### CRM para veterinaria
-
-Un proyecto de Ingeniería de software que busca implementar un software de CRM dentro de una veterinaria
+El proyecto tiene como objetivo el desarrollo e implementación de un software de gestión para una veterinaria, que permita optimizar el tiempo de trabajo, mejorar la eficiencia operativa y facilitar la venta de productos y servicios a través de una plataforma online.
