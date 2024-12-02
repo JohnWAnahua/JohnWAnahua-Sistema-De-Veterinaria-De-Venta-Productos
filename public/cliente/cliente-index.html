@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rammetto+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="styles-cliente.css">
+    <title>Document</title>
+    <script>
+        async function verifyToken() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                
+                window.location.href = '../navbar.html'; // Redirige al login si no hay token
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/user-info', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to authenticate token');
+                }
+
+                const data = await response.json();
+                document.body.style.display = "block"
+            }catch (error) {
+                console.error('Token verification failed:', error);
+                // alert('Invalid token, please login again.');
+                window.location.href = '../navbar.html'; // Redirige al login si el token no es válido
+            }
+        }
+        // Verifica el token al cargar la página
+        window.onload = verifyToken;
+    </script>
+</head>
+<body style="display: none;">
+    <nav class="Barra-Navegacion" id="Barra-Navegacion_Productos">
+        <div class="Container-Logo">
+            <a href="#">
+                <figure>
+                    <img src="../Íconos - Logos/LogoMarvet.svg">
+                </figure>
+                <p>MARVET</p>
+            </a>
+        </div>
+        <div class="Enlaces-Navegacion">
+            <ul class="Primary-container">
+                <li id="Cliente-listaProductos-Content">
+                    <a href="#">
+                        <p>Productos</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <p>Servicios</p>
+                    </a>
+                </li>
+            </ul>
+            <div class="Inicio-Sesion">
+                <div style="position: relative;">
+                <input id="barra-busqueda" placeholder="Buscar">
+                        <figure class="cliente-img lupa">
+                            <a href="#"><img src="../Íconos - Logos/Lupaa.svg"></a>
+                        </figure>
+                </input>
+            </div>
+
+        </div>
+            <div class="Inicio-Sesion">
+                <div class="nombreUser-token">
+                    <p>Hola <span id="nombreUser-token">Mundo</span></p>
+                </div>
+                <figure class="cliente-img user" >
+                    <a href="#"><img id="cliente-img user"class="img-user" src="../Íconos - Logos/user.svg"></a>
+                </figure>
+
+                <div class="modal-opcion-cliente" id="modal-opcion-cliente-logout" style="display: none;">
+                    <div class="triangulo triangulo-cliente"></div>
+                        <div class="opciones-cliente-datos">
+                            <p id="btn_clienite-mis_compras">Mis compras</p>
+                            <p id="btn_clienite-mis_Mascotas">Mis Mascotas</p>
+                            <p id="btn_clienite-mi_cuenta">Mi cuenta</p>
+                            <p class="botonSalir-cliente" id="botonSalir-cliente">Salir</p>
+                        </div>
+                </div>
+
+                <div class="carrito__contenedor_valor-numerico">
+                    <span id="valor-productos" class="white-letter">0</span>
+                </div>
+                <figure class="carrito" style="cursor: pointer;">
+                    <img src="../Íconos - Logos/Carrito-Compras.svg">
+                </figure>
+                <aside id="Contenedor__Sombreado-Modal" class="Contenedor__Sombreado-Modal">
+                    <div class="Contenedor-CarritoCompras">
+                        <div class="Cabecera_Carrito-Compras">
+                            <p>Carrito de compras</p>
+                            <figure id="Cerrar_Carrito-Compras">
+                                <img src="../Íconos - Logos/Equis.svg" alt="">
+                                <span>Cerrar</span>
+                            </figure>
+                        </div>
+
+                        <!-- PLANTILLA ELEMENTO DE CARRITO -->
+                        <div class="Contenedor__producto-aniadido" style="display: none;">
+                            <figure class="Img__Foto-Producto">
+                                <img src="" alt="">
+                            </figure>
+                            <div class="Contenedor__detalle-Producto">
+                                <p class="carrito__nombre-producto"></p>
+                                <p class="contenedor__carrito__precio-producto">S/ 
+                                    <span class="carrito__precio-producto"></span>
+                                </p>
+                            </div>
+                            <div class="Btn_Aumentar-Cantidad-Producto">
+                                <button class="btn btn-disminuir">-</button>
+                                <input class="input__cantidad-producto" type="number" name="" id="" value="1" max="999" oninput="this.value = this.value.slice(0, 3);">
+                                <button class="btn btn-aumentar">+</button>
+                            </div>
+                            <figure class="Img__Eliminar-Producto">
+                                <img src="../Íconos - Logos/trash-bold.svg" alt="">
+                            </figure>
+                        </div>
+
+                        <div class="Contenedor__productos-Seleccionados">
+                            <div class="Contenedor__productos-vacios" style="display: none;">
+                                <img src="../Íconos - Logos/carrito vacio.svg" alt="">
+                                <p class="mensaje__productos-vacios">No hay productos en el carrito</p>
+                                <button class="btn__productos-vacios boton-generico-primario">Regresar a la tienda</button>
+                            </div>
+                            <div class="Contenedor__productos-aniadidos">
+                                <!-- ACÁ SE AÑADIRÁN LOS PRODUCTOS DEL CARRITO -->
+                            </div>
+                        </div>
+                        <div id="contenedor-general__Subtotal-Productos">
+                            <div class="contenedor__Subtotal_Productos-Carrito">
+                                <p class="Subtotal_Productos-Carrito">Subtotal:</p>
+                                <p>
+                                    S/<span class="precio-total-subtotal">0.00</span>
+                                </p>
+                            </div>
+                            <button class="boton-generico-primario" onclick="location.href='./cliente-productos/pagar-productos.html'">Finalizar Compra</button>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+    </nav>
+
+    <div id="caja_contenedora_cliente-content">
+        
+    </div>
+
+<!-- /----------------------------------INTERFAZ DE EXITO-----------------------------------
+ -------------------------------------------------------------------------------------------
+  -------------------------------------------------------------------------------------------
+ -->
+ <div class="modal-generico" id="Modal-InterfazExito"style="display: none">
+    <div class="message-container flex-YX centrado">
+        <img src="../Íconos - Logos/Equis.svg" class="equis-ubicacion" alt=""> 
+        <div class="message-content">
+            <img src="../Íconos - Logos/cheque.png" alt="Success" class="Ayuda-image">
+            <p class="bold tittle color-text-ayuda-verde">¡Acción realizada con éxito!</p>
+            <p class="Ayuda-text">La acción se completó correctamente. Sus cambios han sido guardados.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- /----------------------------------INTERFAZ DE RECHAZO-----------------------------------
+ -------------------------------------------------------------------------------------------
+  -------------------------------------------------------------------------------------------
+ -->
+    <div class="modal-generico" id="Modal-InterfazRechazo"style="display: none" >
+        <div class="message-container flex-XY centrado">
+            <img src="../Íconos - Logos/Equis.svg" class="equis-ubicacion" alt=""> 
+            <div class="message-content">
+                <img src="../Íconos - Logos/boton-eliminar.png" alt="Error" class="Ayuda-image">
+                <p class="bold tittle color-text-ayuda-rojo">¡Error al procesar la solicitud!</p>
+                <p class="Ayuda-text">Por favor, revisar los datos ingresados y vuelva a intentarlo</p>
+            </div>
+        </div>
+    </div>
+
+<!-- /----------------------------------INTERFAZ DE ADVERTENCIA-----------------------------------
+ -------------------------------------------------------------------------------------------
+  -------------------------------------------------------------------------------------------
+ -->
+    <div class="modal-generico" id="Modal-InterfazAdvertencia"style="display: none">
+        <div class="message-container flex-XY centrado">
+            <img src="../Íconos - Logos/Equis.svg" class="equis-ubicacion" alt=""> 
+            <div class="message-content">
+                <img src="../Íconos - Logos/advertencia.svg" alt="Error" class="Ayuda-image">
+                <p class="bold tittle color-text-ayuda-naranja">¿Está seguro que quiere realizar esta acción?</p>
+                <p class="Ayuda-text">Por favor, revisar los datos ingresados y vuelve a intentar</p>
+                <button class="btn-Ayuda btn-naranja opacidad-80">Continuar</button>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="./cliente.mjs"></script>
+    
+</body>
+
+</html>
